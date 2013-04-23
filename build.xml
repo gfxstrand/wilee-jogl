@@ -20,12 +20,14 @@ DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR OTHER
 TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE
 OF THIS SOFTWARE.
 -->
-<project name="wheatley-core" default="release">
+<project name="wheatley-jogl" default="release">
     <property name="source.dir" value="${basedir}/src" />
     <property name="build.dir" value="${basedir}/build" />
     <property name="classes.dir" value="${build.dir}/classes" />
 
     <path id="wheatley.classpath">
+        <pathelement path="/usr/lib64/gluegen2/gluegen2-rt.jar" />
+        <pathelement path="/usr/lib64/jogl2/jogl2.jar" />
         <pathelement path="../wayland-java/wayland-java.jar" />
         <pathelement path="../wheatley-core/wheatley-core.jar" />
     </path>
@@ -38,12 +40,31 @@ OF THIS SOFTWARE.
         </javac>
     </target>
 
-    <target name="clean">
-        <delete dir="${build.dir}" />
+    <target name="glsl">
+        <copy todir="${classes.dir}">
+            <fileset dir="${source.dir}">
+                <include name="**/*.vp" />
+                <include name="**/*.fp" />
+            </fileset>
+        </copy>
     </target>
 
-    <target name="jar" description="Package the library" depends="java,jni">
-        <jar destfile="${ant.project.name}.jar" basedir="${classes.dir}"/>
+    <target name="clean">
+        <delete dir="${build.dir}" />
+        <delete file="${ant.project.name}.jar" />
+    </target>
+
+    <target name="jar" description="Package the library" depends="java,glsl">
+        <jar destfile="${ant.project.name}.jar" basedir="${classes.dir}">
+            <zipfileset src="../wayland-java/wayland-java.jar" />
+            <zipfileset src="../wheatley-core/wheatley-core.jar" />
+            <manifest>
+                <attribute name="Created-By" value="Jason Ekstrand" />
+                <attribute name="Main-Class"
+                        value="net.jlekstrand.wheatley.jogl.MainWindow" />
+                <attribute name="Class-Path" value="/usr/lib64/gluegen2/gluegen2-rt.jar /usr/lib64/jogl2/jogl2.jar" />
+            </manifest>
+        </jar>
     </target>
 
     <target name="release" depends="jar" />
