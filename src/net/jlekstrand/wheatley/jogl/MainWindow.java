@@ -39,7 +39,7 @@ public class MainWindow
         GLCapabilities caps = new GLCapabilities(glp);
 
         final GLWindow window = GLWindow.create(caps);
-        window.setSize(1024, 720);
+        window.setSize(640, 480);
         window.setVisible(true);
         window.setTitle("Wheatley");
 

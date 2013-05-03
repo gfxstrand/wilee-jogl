@@ -43,7 +43,7 @@ import com.jogamp.opengl.util.texture.Texture;
 import com.jogamp.opengl.util.texture.TextureData;
 import com.jogamp.opengl.util.GLArrayDataClient;
 
-import org.freedesktop.wayland.server.Listener;
+import org.freedesktop.wayland.server.DestroyListener;
 import org.freedesktop.wayland.protocol.wl_shm;
 
 import net.jlekstrand.wheatley.*;
@@ -87,9 +87,9 @@ public class GLRenderer implements Renderer, GLEventListener
             texture.setTexParameterf(gl, GL2ES2.GL_TEXTURE_MIN_FILTER,
                     GL2ES2.GL_NEAREST);
 
-            surface.resource.addDestroyListener(new Listener() {
+            surface.resource.addDestroyListener(new DestroyListener() {
                 @Override
-                public void onNotify()
+                public void onDestroy()
                 {
                     destroy(gl);
                     surfaceDataCache.remove(this);
