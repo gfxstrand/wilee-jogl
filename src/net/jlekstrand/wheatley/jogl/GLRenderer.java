@@ -274,6 +274,8 @@ public class GLRenderer implements Renderer, GLEventListener
 
         gl.glClearColor(0, 1, 0, 1);
         gl.glClear(GL2ES2.GL_COLOR_BUFFER_BIT);
+        gl.glEnable(gl.GL_BLEND);
+        gl.glBlendFunc(gl.GL_ONE, gl.GL_ONE_MINUS_SRC_ALPHA);
         initialized = true;
     }
 
