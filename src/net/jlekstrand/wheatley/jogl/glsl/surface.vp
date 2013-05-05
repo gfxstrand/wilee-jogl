@@ -1,14 +1,15 @@
 attribute vec2 va_vertex;
 
-uniform vec2 vu_texture_size;
 uniform mat4 vu_projection;
-uniform mat4 vu_transformation;
+uniform mat3 vu_surface_transform;
+uniform mat3 vu_texture_transform;
 
 varying mediump vec2 vo_tex_coord;
 
 void main() {
-    gl_Position = vu_projection * vu_transformation * vec4(va_vertex, 0, 1);
-    vec2 tex_coord = va_vertex / vu_texture_size;
-    vo_tex_coord = tex_coord;
+    vec3 surface_pos = vu_surface_transform * vec3(va_vertex, 1);
+    vec3 texture_pos = vu_texture_transform * vec3(va_vertex, 1);
+    gl_Position = vu_projection * vec4(surface_pos.xy, 0, surface_pos.z);
+    vo_tex_coord = texture_pos.xy / texture_pos.z;
 }
 

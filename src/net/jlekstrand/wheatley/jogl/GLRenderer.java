@@ -69,8 +69,7 @@ public class GLRenderer implements Renderer, GLEventListener
         private Surface surface;
 
         Texture texture;
-        public int tex_width;
-        public int tex_height;
+        public Matrix3 textureTransform;
         public BufferFormat format;
 
         public SurfaceData(final GL2ES2 gl, Surface surface)
@@ -116,14 +115,17 @@ public class GLRenderer implements Renderer, GLEventListener
                     break;
                 }
 
-                tex_width = shmBuffer.getStride() / 4;
-                tex_height = shmBuffer.getHeight();
+                int tex_width = shmBuffer.getStride() / 4;
+                int tex_height = shmBuffer.getHeight();
 
                 TextureData tdata = new TextureData(drawable.getGLProfile(),
                         GL2ES2.GL_RGBA, tex_width, tex_height, 0,
                         GL2ES2.GL_RGBA, GL2ES2.GL_UNSIGNED_BYTE, false, false,
                         false, bufferData, null);
                 texture.updateImage(gl, tdata);
+
+                textureTransform = Matrix3.scale(1.0f/(float)tex_width,
+                        1.0f/(float)tex_height);
             }
         }
 
@@ -199,22 +201,14 @@ public class GLRenderer implements Renderer, GLEventListener
         ShaderState sstate = shaders.get(surfaceData.format);
         sstate.useProgram(gl, true);
 
-        sstate.uniform(gl, new GLUniformData("vu_texture_size", 2,
-            FloatBuffer.wrap(new float[] {
-                surfaceData.tex_width,
-                surfaceData.tex_height
-            })));
-
         sstate.uniform(gl, new GLUniformData("vu_projection", 4, 4,
             FloatBuffer.wrap(projectionMatrix)));
         
-        sstate.uniform(gl, new GLUniformData("vu_transformation", 4, 4,
-            FloatBuffer.wrap(new float[] {
-                1, 0, 0, 0,
-                0, 1, 0, 0,
-                0, 0, 1, 0,
-                0, 0, 0, 1
-            })));
+        sstate.uniform(gl, new GLUniformData("vu_surface_transform", 3, 3,
+            surface.getTransform().asBuffer()));
+
+        sstate.uniform(gl, new GLUniformData("vu_texture_transform", 3, 3,
+            surfaceData.textureTransform.asBuffer()));
 
         sstate.uniform(gl, new GLUniformData("fu_texture", 0));
         
