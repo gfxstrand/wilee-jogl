@@ -59,6 +59,9 @@ public class MainWindow
         compositor.display.addSocket("wayland-1");
         compositor.setRenderer(renderer);
 
+        NEWTSeat seat = new NEWTSeat(compositor, window);
+        compositor.display.addGlobal(seat);
+
         compositor.run();
     }
 }
