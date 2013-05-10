@@ -30,6 +30,7 @@ import com.jogamp.newt.opengl.GLWindow;
 import com.jogamp.opengl.util.Animator;
 
 import net.jlekstrand.wheatley.Compositor;
+import net.jlekstrand.wheatley.Log;
 
 public class MainWindow
 {
@@ -49,6 +50,8 @@ public class MainWindow
             };
         });
 
+        Log.setLevel(Log.VERBOSE);
+
         GLRenderer renderer = new GLRenderer(window);
         window.addGLEventListener(renderer);
 
@@ -65,3 +68,4 @@ public class MainWindow
         compositor.run();
     }
 }
+

@@ -47,6 +47,7 @@ import org.freedesktop.wayland.server.DestroyListener;
 import org.freedesktop.wayland.protocol.wl_shm;
 
 import net.jlekstrand.wheatley.*;
+import net.jlekstrand.wheatley.graphics.*;
 
 public class GLRenderer implements Renderer, GLEventListener
 {
