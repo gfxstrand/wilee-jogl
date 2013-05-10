@@ -21,6 +21,7 @@
 package net.jlekstrand.wheatley.jogl;
 
 import net.jlekstrand.wheatley.*;
+import net.jlekstrand.wheatley.graphics.Point;
 
 import com.jogamp.newt.opengl.GLWindow;
 import com.jogamp.newt.event.MouseListener;
@@ -34,6 +35,8 @@ class NEWTSeat extends Seat
 {
     private class MouseHandler implements MouseListener
     {
+        private static final int BTN_MOUSE = 0x110;
+
         public MouseHandler()
         { }
     
@@ -56,32 +59,62 @@ class NEWTSeat extends Seat
         @Override
         public void mouseMoved(MouseEvent event)
         {
-            pointer.handleMotion((int)event.getWhen(), new Fixed(event.getX()),
-                    new Fixed(event.getY()));
+            final int when = (int)event.getWhen();
+            final Point p = new Point(event.getX(), event.getY());
+
+            compositor.queueEvent(new Runnable() {
+                public void run()
+                {
+                    pointer.handleMotion(when, p);
+                }
+            });
         }
     
         @Override
         public void mousePressed(MouseEvent event)
         {
-            pointer.handleButton(compositor.display.getSerial(),
-                    (int)event.getWhen(), event.getButton(),
-                    wl_pointer.BUTTON_STATE_PRESSED);
+            final int when = (int)event.getWhen();
+            final int button = event.getButton() - MouseEvent.BUTTON1
+                    + BTN_MOUSE;
+
+            compositor.queueEvent(new Runnable() {
+                public void run()
+                {
+                    pointer.handleButton(compositor.display.getSerial(),
+                            when, button, wl_pointer.BUTTON_STATE_PRESSED);
+                }
+            });
         }
     
         @Override
         public void mouseReleased(MouseEvent event)
         {
-            pointer.handleButton(compositor.display.getSerial(),
-                    (int)event.getWhen(), event.getButton(),
-                    wl_pointer.BUTTON_STATE_RELEASED);
+            final int when = (int)event.getWhen();
+            final int button = event.getButton() - MouseEvent.BUTTON1
+                    + BTN_MOUSE;
+
+            compositor.queueEvent(new Runnable() {
+                public void run()
+                {
+                    pointer.handleButton(compositor.display.getSerial(),
+                            when, button, wl_pointer.BUTTON_STATE_RELEASED);
+                }
+            });
         }
     
         @Override
         public void mouseWheelMoved(MouseEvent event)
         {
-            pointer.handleAxis((int)event.getWhen(),
-                    wl_pointer.AXIS_VERTICAL_SCROLL,
-                    new Fixed(event.getWheelRotation()));
+            final int when = (int)event.getWhen();
+            final Fixed value = new Fixed(event.getWheelRotation());
+
+            compositor.queueEvent(new Runnable() {
+                public void run()
+                {
+                    pointer.handleAxis(when,
+                            wl_pointer.AXIS_VERTICAL_SCROLL, value);
+                }
+            });
         }
     }
 
