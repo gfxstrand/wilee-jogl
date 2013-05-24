@@ -35,8 +35,6 @@ class NEWTSeat extends Seat
 {
     private class MouseHandler implements MouseListener
     {
-        private static final int BTN_MOUSE = 0x110;
-
         public MouseHandler()
         { }
     
@@ -77,7 +75,7 @@ class NEWTSeat extends Seat
         {
             final int when = (int)event.getWhen();
             final int button = event.getButton() - MouseEvent.BUTTON1
-                    + BTN_MOUSE;
+                    + Pointer.BTN_MOUSE;
 
             compositor.queueEvent(new Runnable() {
                 public void run()
@@ -93,7 +91,7 @@ class NEWTSeat extends Seat
         {
             final int when = (int)event.getWhen();
             final int button = event.getButton() - MouseEvent.BUTTON1
-                    + BTN_MOUSE;
+                    + Pointer.BTN_MOUSE;
 
             compositor.queueEvent(new Runnable() {
                 public void run()
