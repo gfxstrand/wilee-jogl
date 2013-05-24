@@ -46,7 +46,9 @@ class NEWTSeat extends Seat
     
         @Override
         public void mouseDragged(MouseEvent event)
-        { }
+        {
+            mouseMoved(event);
+        }
     
         @Override
         public void mouseEntered(MouseEvent event)
