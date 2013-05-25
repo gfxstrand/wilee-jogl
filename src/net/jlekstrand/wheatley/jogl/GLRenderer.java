@@ -26,6 +26,7 @@ import java.nio.ByteBuffer;
 import java.nio.FloatBuffer;
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.HashSet;
 
 import javax.media.opengl.GLContext;
 import javax.media.opengl.GLException;
@@ -65,17 +66,19 @@ public class GLRenderer implements Renderer, GLEventListener
         }
     }
 
-    private class SurfaceData
+    private class SurfaceData implements Surface.RendererData
     {
         private Surface surface;
 
         Texture texture;
         public Matrix3 textureTransform;
         public BufferFormat format;
+        final GL2ES2 gl;
 
         public SurfaceData(final GL2ES2 gl, Surface surface)
         {
             this.surface = surface;
+            this.gl = gl;
 
             this.texture = new Texture(GL2ES2.GL_TEXTURE_2D);
             texture.setTexParameterf(gl, GL2ES2.GL_TEXTURE_WRAP_S,
@@ -86,15 +89,6 @@ public class GLRenderer implements Renderer, GLEventListener
                     GL2ES2.GL_NEAREST);
             texture.setTexParameterf(gl, GL2ES2.GL_TEXTURE_MIN_FILTER,
                     GL2ES2.GL_NEAREST);
-
-            surface.resource.addDestroyListener(new DestroyListener() {
-                @Override
-                public void onDestroy()
-                {
-                    destroy(gl);
-                    surfaceDataCache.remove(this);
-                }
-            });
         }
 
         public void refresh(GL2ES2 gl)
@@ -134,10 +128,17 @@ public class GLRenderer implements Renderer, GLEventListener
         {
             texture.destroy(gl);
         }
+
+        @Override
+        public void onSurfaceDestroyed()
+        {
+            destroy(gl);
+            surfaceData.remove(this);
+        }
     }
 
     private final HashMap<BufferFormat, ShaderState> shaders;
-    private final HashMap<Surface, SurfaceData> surfaceDataCache;
+    private final HashSet<SurfaceData> surfaceData;
 
     private final GLAutoDrawable drawable;
 
@@ -149,7 +150,7 @@ public class GLRenderer implements Renderer, GLEventListener
     public GLRenderer(GLAutoDrawable drawable)
     {
         shaders = new HashMap<BufferFormat, ShaderState>();
-        surfaceDataCache = new HashMap<Surface, SurfaceData>();
+        surfaceData = new HashSet<SurfaceData>();
 
         this.drawable = drawable;
         cachedGL = null;
@@ -191,10 +192,10 @@ public class GLRenderer implements Renderer, GLEventListener
         if (gl == null)
             throw new NullPointerException("cachedGL should not be null");
 
-        SurfaceData surfaceData = surfaceDataCache.get(surface);
+        SurfaceData surfaceData = (SurfaceData)surface.getRendererData();
         if (surfaceData == null) {
             surfaceData = new SurfaceData(gl, surface);
-            surfaceDataCache.put(surface, surfaceData);
+            surface.setRendererData(surfaceData);
         }
 
         surfaceData.refresh(gl);
@@ -293,9 +294,9 @@ public class GLRenderer implements Renderer, GLEventListener
     {
         GL2ES2 gl = drawable.getGL().getGL2ES2();
 
-        for (SurfaceData data : surfaceDataCache.values())
+        for (SurfaceData data : surfaceData)
             data.destroy(gl);
-        surfaceDataCache.clear();
+        surfaceData.clear();
 
         for (ShaderState state : shaders.values())
             state.destroy(gl);
