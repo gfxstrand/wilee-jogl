@@ -2,4 +2,7 @@
 java
 build
 wheatley-jogl.jar
-
+/.settings
+/target
+/.classpath
+/.project 
