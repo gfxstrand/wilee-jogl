@@ -63,7 +63,6 @@ public class MainWindow
         compositor.setRenderer(renderer);
 
         NEWTSeat seat = new NEWTSeat(compositor, window);
-        compositor.display.addGlobal(seat);
 
         compositor.run();
     }
