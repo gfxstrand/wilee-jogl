@@ -19,7 +19,7 @@
  * TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE
  * OF THIS SOFTWARE.
  */
-package net.jlekstrand.wheatley.jogl;
+package net.jlekstrand.wilee.jogl;
 
 import java.io.File;
 
@@ -29,8 +29,8 @@ import com.jogamp.newt.event.WindowEvent;
 import com.jogamp.newt.opengl.GLWindow;
 import com.jogamp.opengl.util.Animator;
 
-import net.jlekstrand.wheatley.Compositor;
-import net.jlekstrand.wheatley.Log;
+import net.jlekstrand.wilee.Compositor;
+import net.jlekstrand.wilee.Log;
 
 public class MainWindow
 {

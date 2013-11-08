@@ -19,7 +19,7 @@
  * TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE
  * OF THIS SOFTWARE.
  */
-package net.jlekstrand.wheatley.jogl;
+package net.jlekstrand.wilee.jogl;
 
 import java.nio.ByteOrder;
 import java.nio.ByteBuffer;
@@ -47,8 +47,8 @@ import com.jogamp.opengl.util.GLArrayDataClient;
 import org.freedesktop.wayland.server.DestroyListener;
 import org.freedesktop.wayland.protocol.wl_shm;
 
-import net.jlekstrand.wheatley.*;
-import net.jlekstrand.wheatley.graphics.*;
+import net.jlekstrand.wilee.*;
+import net.jlekstrand.wilee.graphics.*;
 
 public class GLRenderer implements Renderer, GLEventListener
 {

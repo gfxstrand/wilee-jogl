@@ -18,10 +18,10 @@
  * TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE
  * OF THIS SOFTWARE.
  */
-package net.jlekstrand.wheatley.jogl;
+package net.jlekstrand.wilee.jogl;
 
-import net.jlekstrand.wheatley.*;
-import net.jlekstrand.wheatley.graphics.Point;
+import net.jlekstrand.wilee.*;
+import net.jlekstrand.wilee.graphics.Point;
 
 import com.jogamp.newt.opengl.GLWindow;
 import com.jogamp.newt.event.MouseListener;
